@@ -1,6 +1,22 @@
 const TABKEY = 9;
 const ENTERKEY = 13;
 
+const isYoutubeVideo = url => {
+	return (
+		url.indexOf('https://youtu.be/') === 0 ||
+		(url.indexOf('https://youtube.com/watch?v=') === 0 || options.indexOf('https://www.youtube.com/watch?v=') === 0)
+	);
+};
+
+const getYoutubeID = url => {
+	let id = url
+		.replace('https://youtu.be/', '')
+		.replace('https://youtube.com/watch?v=', '')
+		.replace('https://www.youtube.com/watch?v=', '');
+	if (id.indexOf('&') > 0) id = id.substring(0, id.indexOf('&'));
+	return id;
+};
+
 angular.module('ngWig').component('ngWig', {
 	bindings: {
 		content: '=ngModel',
@@ -16,7 +32,21 @@ angular.module('ngWig').component('ngWig', {
 		ngModelController: 'ngModel'
 	},
 	templateUrl: 'ng-wig/views/ng-wig.html',
-	controller: function($scope, $element, $q, $attrs, $window, $document, $mdDialog, __env, fileService, ngWigToolbar) {
+	controller: function(
+		$rootScope,
+		$scope,
+		$element,
+		$q,
+		$attrs,
+		$window,
+		$document,
+		$mdDialog,
+		__env,
+		fileService,
+		ngWigToolbar
+	) {
+		this.translations = $rootScope.ngWigTranslations = {};
+
 		this.addString = (ev, str) => {
 			ev.preventDefault();
 			if (!$scope.$ctrl.content) $scope.$ctrl.content = '';
@@ -63,7 +93,7 @@ angular.module('ngWig').component('ngWig', {
 			}
 		};
 
-		this.execCommand = (command, options) => {
+		this.execCommand = async (command, options) => {
 			if (this.editMode) return false;
 
 			if (
@@ -74,88 +104,156 @@ angular.module('ngWig').component('ngWig', {
 				throw `The command "${command}" is not supported`;
 			}
 
+			// *************** INSERT IMAGE ***************
+
 			if (command == 'insertImage') {
-				fileService.openDialogConfirm(
-					null,
-					$mdDialog,
-					this.spanish ? 'Confirmar' : 'Confirm',
-					this.spanish
-						? '¿Desea utilizar el servicio de imágenes de Khemlabs?'
-						: 'Do you want to use the Khemlabs image service?',
-					'',
-					this.spanish ? 'Si' : 'Yes',
-					'No',
-					confirmed => {
-						if (confirmed) {
-							fileService.openDialog(null, $mdDialog, { path: 'files/image', type: 'image' }, token => {
-								if ($container.length) $container[0].focus();
-								this.beforeExecCommand({ command, options });
-								options = `${__env.apiDomain}files/image/${token}`;
-								$document[0].execCommand('insertHtml', false, `<img src="${options}"/>`);
-								this.afterExecCommand({ command, options });
-							});
-							return;
-						}
-						return this.fileCommand(command, options);
-					}
-				);
+				// Function to add html
+				const insertImage = () => {
+					if ($container.length) $container[0].focus();
+					this.beforeExecCommand({ command, options });
+					$document[0].execCommand('insertHtml', false, `<img src="${options}"/>`);
+					return this.afterExecCommand({ command, options });
+				};
+				// Ask if must upload image
+				const upload = await this.askCommand({
+					title: this.spanish ? 'Adjuntar imagen' : 'Upload image',
+					text: this.spanish
+						? '¿Desea subir una imagen o adjuntar un link de una imagen alojada en internet?'
+						: 'Do you want to upload an image or attach an internet image?',
+					ok: this.spanish ? 'Subir imagen' : 'Upload image',
+					cancel: this.spanish ? 'Adjuntar link de imagen' : 'Attach image link'
+				});
+				// Must upload image
+				if (upload) {
+					const config = { path: 'files/image', type: 'image' };
+					const token = await fileService.openDialog(null, $mdDialog, config);
+					options = `${__env.apiDomain}files/image/${token}`;
+					return insertImage();
+				}
+				// User wants to link a image
+				const attached = await this.attachCommand(command, options, {
+					title: this.spanish ? 'Adjuntar imagen' : 'Attach image',
+					text: this.spanish ? 'Adjuntar una imagen de internet' : 'Attach an internet image',
+					ok: this.spanish ? 'Adjuntar' : 'Attach',
+					cancel: this.spanish ? 'Cancelar' : 'Cancel'
+				});
+				if (attached) return insertImage();
 				return;
 			}
+
+			// *************** INSERT VIDEO ***************
 
 			if (command == 'insertVideo') {
-				fileService.openDialogConfirm(
-					null,
-					$mdDialog,
-					this.spanish ? 'Confirmar' : 'Confirm',
-					this.spanish
-						? '¿Desea utilizar el servicio de videos de Khemlabs?'
-						: 'Do you want to use the Khemlabs video service?',
-					'',
-					this.spanish ? 'Si' : 'Yes',
-					'No',
-					confirmed => {
-						if (confirmed) {
-							fileService.openDialog(null, $mdDialog, { path: 'files/video', type: 'video' }, token => {
-								if ($container.length) $container[0].focus();
-								this.beforeExecCommand({ command: command, options: options });
-								options = `${__env.apiDomain}files/video/${token}`;
-								$document[0].execCommand(
-									'insertHtml',
-									false,
-									`<br><br><video style="width: 560px; height: 315px" src="${options}"></video><br><br>`
-								);
-								this.afterExecCommand({ command: command, options: options });
-							});
-							return;
-						}
-						options = $window.prompt(
-							this.spanish
-								? 'Por favor ingrese el ID del video de youtube'
-								: 'Please enter the ID of the youtube video',
-							''
-						);
-						if (!options) return;
-						console.log(options);
-						$document[0].execCommand(
-							'insertHtml',
-							false,
-							`<br><br><iframe style="width: 560px; height: 315px" src="https://www.youtube.com/embed/${options}" frameborder="0" allow="autoplay encrypted-media" allowfullscreen=""></iframe><br><br>`
-						);
-						this.afterExecCommand({ command, options });
-					}
-				);
+				// Function to add html
+				const insertVideo = () => {
+					this.beforeExecCommand({ command: command, options: options });
+					options = `${__env.apiDomain}files/video/${token}`;
+					$document[0].execCommand(
+						'insertHtml',
+						false,
+						`<br><br><video controls style="width: 560px; height: 315px" src="${options}"></video><br><br>`
+					);
+					return this.afterExecCommand({ command: command, options: options });
+				};
+				// Ask must upload video
+				const upload = await this.askCommand({
+					title: this.spanish ? 'Adjuntar video' : 'Upload video',
+					text: this.spanish
+						? '¿Desea subir un video o adjuntar un link de un video alojada en internet (el mismo puede ser de youtube)?'
+						: 'Do you want to upload a video or attach a internet video (it can be from youtube)?',
+					ok: this.spanish ? 'Subir video' : 'Upload video',
+					cancel: this.spanish ? 'Adjuntar link de video' : 'Attach video link'
+				});
+				// Must upload video
+				if (upload) {
+					const config = { path: 'files/video', type: 'video' };
+					const token = await fileService.openDialog(null, $mdDialog, config);
+					if ($container.length) $container[0].focus();
+					return insertVideo();
+				}
+				// User wants to link a video
+				const attached = await this.attachCommand(command, options, {
+					title: this.spanish ? 'Adjuntar video' : 'Attach video',
+					text: this.spanish
+						? 'Adjuntar un link de un video (puede ser un link de youtube)'
+						: 'Attach a video link (it can be a youtube link)',
+					ok: this.spanish ? 'Adjuntar' : 'Attach',
+					cancel: this.spanish ? 'Cancelar' : 'Cancel'
+				});
+				if (attached) {
+					// Check if it is a youtube video
+					console.log(options);
+					// ===> It is a link to a video
+					if (!isYoutubeVideo(options)) return insertVideo();
+					// ===> IT IS A YOUTUBE VIDEO
+					this.beforeExecCommand({ command: command, options: options });
+					const id = getYoutubeID(options);
+					console.log(`loading youtube video with id ${id}`);
+					$document[0].execCommand(
+						'insertHtml',
+						false,
+						`<br><br><iframe style="width: 560px; height: 315px" src="https://www.youtube.com/embed/${id}" frameborder="0" allow="autoplay encrypted-media" allowfullscreen=""></iframe><br><br>`
+					);
+					return this.afterExecCommand({ command, options });
+				}
 				return;
 			}
 
-			if (command === 'createlink') return this.fileCommand(command, options);
+			// *************** CREATE LINK ***************
+
+			if (command === 'createlink') {
+				const uploaded = await this.attachCommand(command, options);
+				return this._execCommand(command, options);
+			}
+
+			// *************** EXECUTE CUSTOM COMMAND ***************
 
 			this._execCommand(command, options);
 		};
 
-		this.fileCommand = (command, options) => {
-			options = $window.prompt(this.spanish ? 'Por favor ingrese la URL' : 'Please enter the URL', 'http://');
-			if (!options) return;
-			this._execCommand(command, options);
+		this.attachCommand = async (
+			command,
+			options,
+			config = {
+				title: this.spanish ? 'Adjuntar link' : 'Attach link',
+				text: this.spanish ? 'Por favor ingrese la URL del link' : 'Please enter the link URL',
+				ok: this.spanish ? 'Adjuntar' : 'Attach',
+				cancel: this.spanish ? 'Cancelar' : 'Cancel'
+			}
+		) => {
+			const confirm = $mdDialog
+				.prompt()
+				.title(config.title)
+				.textContent(config.text)
+				.ariaLabel(config.title)
+				.initialValue('')
+				.targetEvent(ev)
+				.required(true)
+				.ok(config.ok)
+				.cancel(config.cancel);
+			let options = null;
+			try {
+				options = await $mdDialog.show(confirm);
+				return true;
+			} catch (error) {
+				return false;
+			}
+		};
+
+		this.askCommand = async config => {
+			const confirm = $mdDialog
+				.confirm()
+				.title(config.title)
+				.textContent(config.text)
+				.targetEvent(ev)
+				.ok(config.ok)
+				.cancel(config.cancel);
+			try {
+				const result = await $mdDialog.show(confirm);
+				return true;
+			} catch (error) {
+				return false;
+			}
 		};
 
 		this._execCommand = (command, options) => {
@@ -175,8 +273,14 @@ angular.module('ngWig').component('ngWig', {
 			if ($container.length) $container[0].focus();
 		};
 
+		this.translations = {};
+
+		this.asd = 'test';
+
 		this.$onInit = () => {
 			this.toolbarButtons = ngWigToolbar.getToolbarButtons(this.buttons && string2array(this.buttons));
+
+			this.translations = $rootScope.ngWigTranslations = ngWigToolbar.getTranslations();
 
 			let placeholder = Boolean(this.placeholder);
 

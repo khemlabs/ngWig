@@ -1,62 +1,94 @@
-angular.module('ngWig').provider('ngWigToolbar', function () {
+angular.module('ngWig').provider('ngWigToolbar', function() {
+	this.translations = {
+		unorderedlist: 'Unordered List',
+		orderedlist: 'Ordered List',
+		bold: 'Bold',
+		italic: 'Italic',
+		link: 'Link'
+	};
 
-  var buttonLibrary = {
-    list1: {title: 'Unordered List', command: 'insertunorderedlist', styleClass: 'list-ul'},
-    list2: {title: 'Ordered List', command: 'insertorderedlist', styleClass: 'list-ol'},
-    bold: {title: 'Bold', command: 'bold', styleClass: 'bold'},
-    italic: {title: 'Italic', command: 'italic', styleClass: 'italic'},
-    link: {title: 'Link', command: 'createlink', styleClass: 'link'}
-  };
+	const buttonLibrary = {
+		unorderedlist: {
+			name: 'unorderedlist',
+			command: 'insertunorderedlist',
+			styleClass: 'list-ul'
+		},
+		orderedlist: {
+			name: 'orderedlist',
+			command: 'insertorderedlist',
+			styleClass: 'list-ol'
+		},
+		bold: {
+			name: 'bold',
+			command: 'bold',
+			styleClass: 'bold'
+		},
+		italic: {
+			name: 'italic',
+			command: 'italic',
+			styleClass: 'italic'
+		},
+		link: {
+			name: 'link',
+			command: 'createlink',
+			styleClass: 'link'
+		}
+	};
 
-  var defaultButtonsList = ['list1', 'list2', 'bold', 'italic', 'link'];
+	let defaultButtonsList = ['unorderedlist', 'orderedlist', 'bold', 'italic', 'link'];
 
-  var isButtonActive = function () {
-    return !!this.command && document.queryCommandState(this.command);
-  };
+	const isButtonActive = function() {
+		return !!this.command && document.queryCommandState(this.command);
+	};
 
-  this.setButtons = function(buttons) {
-    if(!angular.isArray(buttons)) {
-      throw 'Argument "buttons" should be an array';
-    }
+	this.setTranslations = translations => {
+		if (typeof translations != 'object') {
+			throw '[setStranslations] Argument "translations" should be an object';
+		}
+		const keys = Object.keys(translations);
+		keys.forEach(t => (this.translations[t] = translations[t]));
+	};
 
-    defaultButtonsList = buttons;
-  };
+	this.setButtons = buttons => {
+		if (!angular.isArray(buttons)) {
+			throw 'Argument "buttons" should be an array';
+		}
+		defaultButtonsList = buttons;
+	};
 
-  this.addStandardButton = function (name, title, command, styleClass) {
-    if(!name || !title || !command) {
-      throw 'Arguments "name", "title" and "command" are required';
-    }
+	this.addStandardButton = (name, title, command, styleClass) => {
+		if (!name || !title || !command) {
+			throw 'Arguments "name", "title" and "command" are required';
+		}
+		styleClass = styleClass || '';
+		this.translations[name] = title;
+		buttonLibrary[name] = { name, command, styleClass };
+		defaultButtonsList.push(name);
+	};
 
-    styleClass = styleClass || '';
-    buttonLibrary[name] = {title: title, command: command, styleClass: styleClass}
-    defaultButtonsList.push(name);
-  };
+	this.addCustomButton = (name, pluginName) => {
+		if (!name || !pluginName) {
+			throw 'Arguments "name" and "pluginName" are required';
+		}
+		buttonLibrary[name] = { pluginName, isComplex: true };
+		defaultButtonsList.push(name);
+	};
 
-  this.addCustomButton = function (name, pluginName) {
-    if(!name || !pluginName) {
-      throw 'Arguments "name" and "pluginName" are required';
-    }
-
-    buttonLibrary[name] = {pluginName: pluginName, isComplex: true};
-    defaultButtonsList.push(name);
-  };
-
-  this.$get = function () {
-    return {
-      getToolbarButtons: function(list) {
-        var toolbarButtons = [];
-        (list || defaultButtonsList).forEach(function(buttonKey) {
-          if(!buttonLibrary[buttonKey]) {
-            throw 'There is no "' + buttonKey + '" in your library. Possible variants: ' + Object.keys(buttonLibrary);
-          }
-
-          var button = angular.copy(buttonLibrary[buttonKey]);
-          button.isActive = isButtonActive;
-          toolbarButtons.push(button);
-        });
-        return toolbarButtons;
-      }
-    };
-  };
-
+	this.$get = function() {
+		return {
+			getTranslations: () => this.translations,
+			getToolbarButtons: list => {
+				let toolbarButtons = [];
+				(list || defaultButtonsList).forEach(buttonKey => {
+					if (!buttonLibrary[buttonKey]) {
+						throw 'There is no "' + buttonKey + '" in your library. Possible variants: ' + Object.keys(buttonLibrary);
+					}
+					let button = angular.copy(buttonLibrary[buttonKey]);
+					button.isActive = isButtonActive;
+					toolbarButtons.push(button);
+				});
+				return toolbarButtons;
+			}
+		};
+	};
 });

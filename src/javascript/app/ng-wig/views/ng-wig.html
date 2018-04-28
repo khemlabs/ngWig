@@ -2,9 +2,8 @@
 	<ul class="nw-toolbar">
 		<li class="nw-toolbar__item" ng-repeat="button in $ctrl.toolbarButtons">
 			<div ng-if="!button.isComplex">
-				<button type="button" class="nw-button {{button.styleClass}}" title="{{button.title}}" ng-click="$ctrl.execCommand(button.command)"
+				<button type="button" class="nw-button {{button.styleClass}}" title="{{ $ctrl.translations[button.name]}}" ng-click="$ctrl.execCommand(button.command)"
 				 ng-class="{ 'nw-button--active': !$ctrl.disabled && $ctrl.isEditorActive() && button.isActive() }" ng-disabled="$ctrl.editMode || $ctrl.disabled">
-					{{ button.title }}
 				</button>
 			</div>
 			<div ng-if="button.isComplex">
@@ -12,12 +11,9 @@
 				 content="$ctrl.content"></ng-wig-plugin>
 			</div>
 		</li>
-		<!--
-    -->
 		<li class="nw-toolbar__item">
-			<button type="button" class="nw-button nw-button--source" title="Edit HTML" ng-class="{ 'nw-button--active': $ctrl.editMode }"
+			<button type="button" class="nw-button nw-button--source" title="{{$ctrl.translations.editMode || 'Edit HTML'}}" ng-class="{ 'nw-button--active': $ctrl.editMode }"
 			 ng-if="$ctrl.isSourceModeAllowed" ng-click="$ctrl.toggleEditMode()" ng-disabled="$ctrl.disabled">
-				Edit HTML
 			</button>
 		</li>
 	</ul>
