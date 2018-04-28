@@ -1,7 +1,62 @@
 {
-	"name": "ng-wig",
-	"version": "3.0.20",
-	"author": "Stepan Suvorov",
+	"_args": [
+		[
+			{
+				"raw": "git+https://github.com/khemlabs/ngWig.git",
+				"scope": null,
+				"escapedName": null,
+				"name": null,
+				"rawSpec": "git+https://github.com/khemlabs/ngWig.git",
+				"spec": "git+https://github.com/khemlabs/ngWig.git",
+				"type": "hosted",
+				"hosted": {
+					"type": "github",
+					"ssh": "git@github.com:khemlabs/ngWig.git",
+					"sshUrl": "git+ssh://git@github.com/khemlabs/ngWig.git",
+					"httpsUrl": "git+https://github.com/khemlabs/ngWig.git",
+					"gitUrl": "git://github.com/khemlabs/ngWig.git",
+					"shortcut": "github:khemlabs/ngWig",
+					"directUrl": "https://raw.githubusercontent.com/khemlabs/ngWig/master/package.json"
+				}
+			},
+			"/app"
+		]
+	],
+	"_from": "git+https://github.com/khemlabs/ngWig.git",
+	"_id": "ng-wig@3.0.20",
+	"_inCache": true,
+	"_location": "/ng-wig",
+	"_phantomChildren": {},
+	"_requested": {
+		"raw": "git+https://github.com/khemlabs/ngWig.git",
+		"scope": null,
+		"escapedName": null,
+		"name": null,
+		"rawSpec": "git+https://github.com/khemlabs/ngWig.git",
+		"spec": "git+https://github.com/khemlabs/ngWig.git",
+		"type": "hosted",
+		"hosted": {
+			"type": "github",
+			"ssh": "git@github.com:khemlabs/ngWig.git",
+			"sshUrl": "git+ssh://git@github.com/khemlabs/ngWig.git",
+			"httpsUrl": "git+https://github.com/khemlabs/ngWig.git",
+			"gitUrl": "git://github.com/khemlabs/ngWig.git",
+			"shortcut": "github:khemlabs/ngWig",
+			"directUrl": "https://raw.githubusercontent.com/khemlabs/ngWig/master/package.json"
+		}
+	},
+	"_requiredBy": [
+		"#USER",
+		"/"
+	],
+	"_resolved": "git+https://github.com/khemlabs/ngWig.git#38a63a56df779445316515c370f847fe775e9f80",
+	"_shasum": "52ab392080ed2e4670de011ba65d5bd072277cff",
+	"_shrinkwrap": null,
+	"_spec": "git+https://github.com/khemlabs/ngWig.git",
+	"_where": "/app",
+	"author": {
+		"name": "Stepan Suvorov"
+	},
 	"contributors": [
 		{
 			"name": "Besuhoff",
@@ -20,10 +75,13 @@
 			"url": "https://github.com/Velzevul"
 		}
 	],
+	"dependencies": {
+		"angular": "1.6.0"
+	},
+	"description": "## Dependencies",
 	"devDependencies": {
 		"angular-mocks": "1.5.0",
 		"babel-preset-es2015": "6.6.0",
-		"bower": "1.7.7",
 		"eslint": "2.4.0",
 		"grunt": "0.4.5",
 		"grunt-babel": "6.0.0",
@@ -45,18 +103,23 @@
 		"karma-jasmine": "1.0.2",
 		"load-grunt-tasks": "0.4.0"
 	},
-	"dependencies": {
-		"angular": "1.6.0"
-	},
+	"gitHead": "38a63a56df779445316515c370f847fe775e9f80",
+	"license": "MIT",
 	"main": "dist/ng-wig.min.js",
+	"name": "ng-wig",
+	"optionalDependencies": {},
+	"readme": "# ngWig\n\n## Dependencies\n\n_it's only AngularJS! No jQuery or other WYSIWYG monsters_\n\n* ng-wig2+ - Angular1.3+\n* ng-wig3+ - Angular1.5+\n\nAlso suports latest Angular1.6\n\n## WARNING\n\n**this version only works with khemlabs client kickstarter**\n\n## Usage\n\n    angular.module('yourApp', ['ngWig'])\n\nit's just attribute directive for textarea:\n\n    <ng-wig ng-model=\"text1\"></ng-wig>\n\n## Sanitization\n\n**Important:** ngWig is light weight solution that **does not include sanitization module**. So it's your own\nresponsiblity to be sure that contecnt that you placed there is already checked and does not have any possible\ninjections. Credits to [@MacJu](https://github.com/MacJu) for highlighting the issue.\n\n## Installation\n\nngWig could be simply installed via npm:\n\n    npm install ng-wig\n\nor via bower:\n\n    bower install ng-wig\n\n## CDN\n\n    https://cdnjs.cloudflare.com/ajax/libs/ng-wig/3.0.14/ng-wig.min.js\n\n\thttps://cdnjs.cloudflare.com/ajax/libs/ng-wig/3.0.14/ng-wig.js\n\n\thttps://cdnjs.cloudflare.com/ajax/libs/ng-wig/3.0.14/css/ng-wig.css\n\n## Always last version CDN\n\n    https://cdn.rawgit.com/stevermeister/ngWig/master/dist/ng-wig.min.js\n\n\thttps://cdn.rawgit.com/stevermeister/ngWig/master/dist/ng-wig.js\n\n\thttps://cdn.rawgit.com/stevermeister/ngWig/master/dist/css/ng-wig.css\n\n[Demo](http://stevermeister.github.io/ngWig/demo/)\n\n[![Screenshot](http://stevermeister.github.io/ngWig/images/ng-wig-demo.png)](http://stevermeister.github.io/ngWig/demo/)\n\n## Examples\n\n### Quick start ([plunker](https://plnkr.co/edit/IaTeHRUdWU1WUJnUiftl?p=preview))\n\n    <ng-wig ng-model=\"text1\"></ng-wig>\n\n### Disabled ([plunker](https://plnkr.co/edit/og1wRflbWfqyC8S4edzs?p=preview))\n\n    <ng-wig ng-model=\"text1\" ng-disabled=\"true\"></ng-wig>\n\n### Edit Source option ([plunker](https://plnkr.co/edit/JVOI2l2gnZMKORMWjAEZ?p=preview))\n\n    <ng-wig ng-model=\"text1\" source-mode-allowed></ng-wig>\n\n### Placeholder ([plunker](https://plnkr.co/edit/yXZkpyHcb47rbXfTHs31?p=preview))\n\n    <ng-wig ng-model=\"text1\" placeholder=\"'Enter instructions here.'\"></ng-wig>\n\n### ngModel sync ([plunker](https://plnkr.co/edit/8owI0CDjoos8DArlc10g?p=preview))\n\n    <ng-wig ng-model=\"text1\"></ng-wig>\n\t<ng-wig ng-model=\"text1\"></ng-wig>\n\n### Set buttons ([plunker](https://plnkr.co/edit/9Fjqwnf74jJAKNx2cMYI?p=preview))\n\n    <ng-wig ng-model=\"text1\" buttons=\"formats, bold, italic\"></ng-wig>\n\n### Setup generic buttons ([plunker](https://plnkr.co/edit/XteWPwo0eQ1gz4L6cpDr?p=preview))\n\n    .config(['ngWigToolbarProvider', function(ngWigToolbarProvider) {\n\t  ngWigToolbarProvider.setButtons(['bold', 'italic']);\n\t}]);\n\n### Add standard buttons ([plunker](https://plnkr.co/edit/Avi90RnnoTPGWzosQHQo?p=preview))\n\n    .config(['ngWigToolbarProvider', function(ngWigToolbarProvider) {\n\t  ngWigToolbarProvider.addStandardButton('underline', 'Underline', 'underline', 'fa-underline');\n\t}]);\n\n### Add custom button (plugin) ([plunker](https://plnkr.co/edit/Ik2fmPzDu6ecifUqVICv?p=preview))\n\n* Javascript:\n\n\t      angular.module('ngWig').config(['ngWigToolbarProvider', function(ngWigToolbarProvider) {\n\t\t      ngWigToolbarProvider.addCustomButton('my-custom', 'nw-my-custom-button');\n\t\t  }])\n\t\t  .component('nwMyCustomButton', {\n\t\t      template: '<button class=\"nw-button my-custom\" title=\"My Custom Button\" ng-click=\"$ctrl.click()\">My Custom Button</button>',\n\t\t      controller: function() {\n\t\t          this.click = function(){\n\t\t              alert('My Custom Button');\n\t\t          };\n\t\t      }\n\t\t  });\n\n* CSS:\n\n\t      .nw-button.my-custom:before {\n\t\t      content: '\\f1b3';\n\t\t  }\n\n### OnPaste Hook ([plunker](https://plnkr.co/edit/dsvfoDZw8CPVrNo9R6Bv?p=preview))\n\n        <ng-wig ng-model=\"text1\" on-paste=\"onPaste($event, pasteContent)\"></ng-wig>\n\n### Formats (plugin) ([plunker](https://plnkr.co/edit/TgKThPQjlG4ctzGYk6Kq?p=preview))\n\n        <ng-wig ng-model=\"text1\" buttons=\"formats\"></ng-wig>\n\n### Forecolor (plugin) ([plunker](https://plnkr.co/edit/2hmkjBJHs7tTyOU7TDIH?p=preview))\n\n        <ng-wig ng-model=\"text1\" buttons=\"forecolor\"></ng-wig>\n\n### Clear Styles (plugin) ([plunker](https://plnkr.co/edit/j8FtcMAVkLSztZ6V0ION?p=preview))\n\n        <ng-wig ng-model=\"text1\" buttons=\"clear-styles\"></ng-wig>\n\n## Contribution (Development Setup)\n\n    npm install\n\tnpm run devSetup\n\n## Creating plugins\n",
+	"readmeFilename": "README.md",
 	"repository": {
 		"type": "git",
 		"git": "https://github.com/stevermeister/ngWig.git"
 	},
 	"scripts": {
+		"devSetup": "npm install && grunt install",
+		"devBuild": "grunt devBuild",
+		"build": "grunt build",
 		"start": "grunt start",
-		"devSetup": "bower install && grunt install",
 		"test": "grunt karma:unit"
 	},
-	"license": "MIT"
+	"version": "3.0.21"
 }
