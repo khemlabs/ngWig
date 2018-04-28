@@ -1,7 +1,7 @@
 'use strict';
 
 /**
- * version: 3.0.24
+ * version: 3.0.25
  */
 var VERSION = '3.0.16';
 angular.module('ngWig', ['ngwig-app-templates']);
@@ -117,7 +117,7 @@ angular.module('ngWig').component('ngWig', {
 					options = $window.prompt(_this.spanish ? 'Por favor ingrese el ID del video de youtube' : 'Please enter the ID of the youtube video', '');
 					if (!options) return;
 					console.log(options);
-					$document[0].execCommand('insertHtml', false, '<br><br><iframe style="width: 560px; height: 315px" src="https://www.youtube.com/embed/' + options + '" frameborder="0" encrypted-media" allowfullscreen=""></iframe><br><br>');
+					$document[0].execCommand('insertHtml', false, '<br><br><iframe style="width: 560px; height: 315px" src="https://www.youtube.com/embed/' + options + '" frameborder="0" allow="autoplay encrypted-media" allowfullscreen=""></iframe><br><br>');
 					_this.afterExecCommand({ command: command, options: options });
 				});
 				return;
