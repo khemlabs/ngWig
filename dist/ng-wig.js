@@ -1,8 +1,9 @@
 'use strict';
 
 /**
- * version: 3.0.25
+ * version: 3.0.26
  */
+
 var VERSION = '3.0.16';
 angular.module('ngWig', ['ngwig-app-templates']);
 angular.ngWig = {
@@ -312,4 +313,5 @@ angular.module('ngwig-app-templates', ['ng-wig/views/ng-wig.html']);
 angular.module("ng-wig/views/ng-wig.html", []).run(["$templateCache", function ($templateCache) {
 	$templateCache.put("ng-wig/views/ng-wig.html", "<div class=\"ng-wig\">\n" + "	<ul class=\"nw-toolbar\">\n" + "		<li class=\"nw-toolbar__item\" ng-repeat=\"button in $ctrl.toolbarButtons\">\n" + "			<div ng-if=\"!button.isComplex\">\n" + "				<button type=\"button\" class=\"nw-button {{button.styleClass}}\" title=\"{{button.title}}\" ng-click=\"$ctrl.execCommand(button.command)\"\n" + "				 ng-class=\"{ 'nw-button--active': !$ctrl.disabled && $ctrl.isEditorActive() && button.isActive() }\" ng-disabled=\"$ctrl.editMode || $ctrl.disabled\">\n" + "					{{ button.title }}\n" + "				</button>\n" + "			</div>\n" + "			<div ng-if=\"button.isComplex\">\n" + "				<ng-wig-plugin exec-command=\"$ctrl.execCommand\" plugin=\"button\" edit-mode=\"$ctrl.editMode\" disabled=\"$ctrl.disabled\" options=\"$ctrl.options\"\n" + "				 content=\"$ctrl.content\"></ng-wig-plugin>\n" + "			</div>\n" + "		</li>\n" + "		<!--\n" + "    -->\n" + "		<li class=\"nw-toolbar__item\">\n" + "			<button type=\"button\" class=\"nw-button nw-button--source\" title=\"Edit HTML\" ng-class=\"{ 'nw-button--active': $ctrl.editMode }\"\n" + "			 ng-if=\"$ctrl.isSourceModeAllowed\" ng-click=\"$ctrl.toggleEditMode()\" ng-disabled=\"$ctrl.disabled\">\n" + "				Edit HTML\n" + "			</button>\n" + "		</li>\n" + "	</ul>\n" + "\n" + "	<div class=\"nw-editor-container\">\n" + "		<div class=\"nw-editor__src-container\" ng-show=\"$ctrl.editMode\">\n" + "			<textarea ng-model=\"$ctrl.content\" ng-disabled=\"$ctrl.disabled\" id=\"nw-editor__src\" ng-keydown=\"$ctrl.keyDown($event)\"></textarea>\n" + "		</div>\n" + "		<div class=\"nw-editor\" ng-class=\"{ 'nw-disabled': $ctrl.disabled }\">\n" + "			<div id=\"ng-wig-editable\" class=\"nw-editor__res\" ng-class=\"{'nw-invisible': $ctrl.editMode}\" ng-disabled=\"$ctrl.disabled\"\n" + "			 contenteditable placeholder=\"{{$ctrl.placeholder}}\">\n" + "			</div>\n" + "		</div>\n" + "	</div>\n" + "</div>");
 }]);
+//# sourceMappingURL=ng-wig.js.map
 //# sourceMappingURL=ng-wig.js.map
