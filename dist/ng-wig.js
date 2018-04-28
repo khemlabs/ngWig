@@ -1,7 +1,7 @@
 'use strict';
 
 /**
- * version: 3.0.23
+ * version: 3.0.24
  */
 var VERSION = '3.0.16';
 angular.module('ngWig', ['ngwig-app-templates']);
@@ -109,7 +109,7 @@ angular.module('ngWig').component('ngWig', {
 							if ($container.length) $container[0].focus();
 							_this.beforeExecCommand({ command: command, options: options });
 							options = __env.apiDomain + 'files/video/' + token;
-							$document[0].execCommand('insertHtml', false, '<br><br>\n\t\t\t\t\t\t\t\t\t<video style="width: 560px; height: 315px" src="' + options + '"></video><br><br>\n\t\t\t\t\t\t\t\t\t\t');
+							$document[0].execCommand('insertHtml', false, '<br><br><video style="width: 560px; height: 315px" src="' + options + '"></video><br><br>');
 							_this.afterExecCommand({ command: command, options: options });
 						});
 						return;
@@ -117,7 +117,7 @@ angular.module('ngWig').component('ngWig', {
 					options = $window.prompt(_this.spanish ? 'Por favor ingrese el ID del video de youtube' : 'Please enter the ID of the youtube video', '');
 					if (!options) return;
 					console.log(options);
-					$document[0].execCommand('insertHtml', false, '<br><br>\n\t\t\t\t\t\t\t\t<iframe style="width: 560px; height: 315px" src="https://www.youtube.com/embed/' + options + '" frameborder="0" encrypted-media" allowfullscreen=""></iframe><br><br>\n\t\t\t\t\t\t\t\t\t\t');
+					$document[0].execCommand('insertHtml', false, '<br><br><iframe style="width: 560px; height: 315px" src="https://www.youtube.com/embed/' + options + '" frameborder="0" encrypted-media" allowfullscreen=""></iframe><br><br>');
 					_this.afterExecCommand({ command: command, options: options });
 				});
 				return;
