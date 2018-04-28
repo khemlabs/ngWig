@@ -139,7 +139,7 @@ angular.module('ngWig').component('ngWig', {
 						$document[0].execCommand(
 							'insertHtml',
 							false,
-							`<br><br><iframe style="width: 560px; height: 315px" src="https://www.youtube.com/embed/${options}" frameborder="0" encrypted-media" allowfullscreen=""></iframe><br><br>`
+							`<br><br><iframe style="width: 560px; height: 315px" src="https://www.youtube.com/embed/${options}" frameborder="0" allow="autoplay encrypted-media" allowfullscreen=""></iframe><br><br>`
 						);
 						this.afterExecCommand({ command, options });
 					}
