@@ -121,5 +121,5 @@
 		"start": "grunt start",
 		"test": "grunt karma:unit"
 	},
-	"version": "3.0.22"
+	"version": "3.0.23"
 }
