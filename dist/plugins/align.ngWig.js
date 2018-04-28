@@ -109,3 +109,4 @@ angular.module('ngWig').config(['ngWigToolbarProvider', function (ngWigToolbarPr
 //# sourceMappingURL=align.ngWig.js.map
 //# sourceMappingURL=align.ngWig.js.map
 //# sourceMappingURL=align.ngWig.js.map
+//# sourceMappingURL=align.ngWig.js.map
